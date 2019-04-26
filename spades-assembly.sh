@@ -16,10 +16,10 @@ GENES="/home/appankow/HHV8/genomes/GK18.gff3.txt"
 cd $EXPDIR
 
 # convert back to fastq
-samtools bam2fq -s singles.fq $BAM > interleaved.fq
+samtools-1.6 fastq -s singles.fq -1 read1 -2 read2 $BAM > leftover.fq
 
 # run spades
-spades.py -k 21,35,55,71,81 -t 3 --careful -o spades_output --pe1-12 interleaved.fq --pe1-s singles.fq
+spades.py -k 21,35,55,71,81 -t 3 --careful -o spades_output --pe1-1 read1.fq --pe1-2 read2.fq --pe1-s singles.fq
 
 # select all contigs longer than 500 bp
 filter_contigs.py 500 spades_output/scaffolds.fasta
@@ -28,4 +28,4 @@ filter_contigs.py 500 spades_output/scaffolds.fasta
 quast.py -o quast -R $REF -G $GENES spades_output/scaffolds.filter500.fasta
 
 # align those contigs to specified HHV8 reference
-bwa mem $REF spades_output/scaffolds.filter500.fasta >> scaffolds-to-GK18.sam
+bwa mem $REF spades_output/scaffolds.filter500.fasta > scaffolds-to-GK18.sam
