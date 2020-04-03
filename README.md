@@ -1,6 +1,6 @@
 ### Spades assembly pipeline
 
-Conents
+Contents
 
 `spades-prep.sh`:
 
